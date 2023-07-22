@@ -1,0 +1,51 @@
+{
+    "version": 1,
+    "header": {
+        "slots": null,
+        "params": null
+    },
+    "db": {
+        "version": 2,
+        "entries": [
+            {
+                "type": "totp",
+                "uuid": "01234567-89ab-cdef-0123-456789abcdef",
+                "name": "Bob",
+                "issuer": "Google",
+                "icon": null,
+                "info": {
+                    "secret": "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567",
+                    "algo": "SHA1",
+                    "digits": 6,
+                    "period": 30
+                }
+            },
+            {
+                "type": "hotp",
+                "uuid": "03e572f2-8ebd-44b0-a57e-e958af74815d",
+                "name": "Benjamin",
+                "issuer": "Air Canada",
+                "icon": null,
+                "info": {
+                    "secret": "KUVJJOM753IHTNDSZVCNKL7GII",
+                    "algo": "SHA256",
+                    "digits": 7,
+                    "counter": 50
+                }
+            },
+            {
+                "type": "steam",
+                "uuid": "5b11ae3b-6fc3-4d46-8ca7-cf0aea7de920",
+                "name": "Sophia",
+                "issuer": "Boeing",
+                "icon": null,
+                "info": {
+                    "secret": "JRZCL47CMXVOQMNPZR2F7J4RGI",
+                    "algo": "SHA1",
+                    "digits": 5,
+                    "period": 30
+                }
+            }
+        ]
+    }
+}

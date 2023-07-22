@@ -1,0 +1,38 @@
+{
+    "version": 1,
+    "header": {
+        "slots": null,
+        "params": null
+    },
+    "db": {
+        "version": 2,
+        "entries": [
+            {
+                "type": "totp",
+                "uuid": "01234567-89ab-cdef-0123-456789abcdef",
+                "name": "missing-issuer@issuer",
+                "issuer": null,
+                "icon": null,
+                "info": {
+                    "secret": "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567",
+                    "algo": "SHA1",
+                    "digits": 6,
+                    "period": 30
+                }
+            },
+            {
+                "type": "totp",
+                "uuid": "01234567-89ab-cdef-0123-456789abcdef",
+                "name": "missing-issuer@domain.com@issuer",
+                "issuer": null,
+                "icon": null,
+                "info": {
+                    "secret": "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567",
+                    "algo": "SHA1",
+                    "digits": 6,
+                    "period": 30
+                }
+            }
+        ]
+    }
+}

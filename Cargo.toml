@@ -1,0 +1,9 @@
+[package]
+name = "aegis-vault-rs"
+version = "0.1.0"
+edition = "2021"
+description = "Library for parsing and dumping Aegis vaults"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]

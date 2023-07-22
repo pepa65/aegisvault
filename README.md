@@ -1,4 +1,5 @@
 # aegis-vault-rs
+[![License file](https://img.shields.io/github/license/louib/aegis-vault-rs)](https://github.com/louib/aegis-vault-rs/blob/main/LICENSE)
 
 Library for parsing and dumping Aegis vaults
 

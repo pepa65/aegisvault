@@ -12,13 +12,13 @@
 //! aegis android app is able to read the files! See line 173 for a discussion.
 
 use aes_gcm::{aead::Aead, KeyInit};
-use anyhow::{Context, Result};
+use anyhow::{anyhow, Context, Result};
 use gettextrs::gettext;
 use rand::RngCore;
 use serde::{Deserialize, Serialize};
 use zeroize::{Zeroize, ZeroizeOnDrop};
 
-use crate::models::{Account, Algorithm, Method, Provider, ProvidersModel};
+use crate::algorithm::{Algorithm, Method};
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -108,7 +108,10 @@ impl Aegis {
         .map_err(|_| anyhow::anyhow!("Scrypt key derivation"))?;
 
         // Encrypt new master key with derived key
-        let cipher = aes_gcm::Aes256Gcm::new_from_slice(&derived_key)?;
+        let cipher = match aes_gcm::Aes256Gcm::new_from_slice(&derived_key) {
+            Ok(c) => c,
+            Err(e) => return Err(anyhow!("Could not create cipher from key")),
+        };
         let mut ciphertext: Vec<u8> = cipher
             .encrypt(
                 aes_gcm::Nonce::from_slice(&password_slot.key_params.nonce),
@@ -126,7 +129,10 @@ impl Aegis {
             let db_json: Vec<u8> = serde_json::ser::to_string_pretty(&plain_text.db)?
                 .as_bytes()
                 .to_vec();
-            let cipher = aes_gcm::Aes256Gcm::new_from_slice(&master_key)?;
+            let cipher = match aes_gcm::Aes256Gcm::new_from_slice(&master_key) {
+                Ok(c) => c,
+                Err(e) => return Err(anyhow!("Could not create cipher from master key")),
+            };
             let mut ciphertext: Vec<u8> = cipher
                 .encrypt(
                     aes_gcm::Nonce::from_slice(&header.params.as_ref().unwrap().nonce),
@@ -295,33 +301,6 @@ pub struct Item {
 }
 
 impl Item {
-    pub fn new(account: &Account) -> Self {
-        let provider = account.provider();
-
-        let mut detail = Detail {
-            secret: account.otp().secret(),
-            algorithm: provider.algorithm(),
-            digits: provider.digits(),
-            period: None,
-            counter: None,
-        };
-
-        if provider.method().is_event_based() {
-            detail.counter = Some(account.counter());
-        } else {
-            detail.period = Some(provider.period());
-        }
-
-        Self {
-            method: provider.method(),
-            label: account.name(),
-            issuer: Some(provider.name()),
-            tags: None,
-            thumbnail: None,
-            info: detail,
-        }
-    }
-
     pub fn fix_empty_issuer(&mut self) -> Result<()> {
         if self.issuer.is_none() {
             let mut vals: Vec<&str> = self.label.split('@').collect();
@@ -390,47 +369,9 @@ impl Item {
 
 impl Aegis {
     const ENCRYPTABLE: bool = true;
-    const IDENTIFIER: &'static str = "aegis";
-
-    fn title() -> String {
-        // Translators: This is for making a backup for the aegis Android app.
-        gettext("Aegis")
-    }
-
-    fn subtitle() -> String {
-        gettext("Into a JSON file containing plain-text or encrypted fields")
-    }
-
-    fn backup(model: &ProvidersModel, key: Option<&str>) -> Result<Vec<u8>> {
-        // Create structure
-        let mut aegis_root = Aegis::default();
-
-        for i in 0..model.n_items() {
-            let provider = model.item(i).and_downcast::<Provider>().unwrap();
-            let accounts = provider.accounts_model();
-
-            for j in 0..accounts.n_items() {
-                let account = accounts.item(j).and_downcast::<Account>().unwrap();
-                let otp_item = Item::new(&account);
-                aegis_root.add_item(otp_item);
-            }
-        }
-
-        if let Some(password) = key {
-            aegis_root.encrypt(password)?;
-        }
-
-        let content = serde_json::ser::to_string_pretty(&aegis_root)?;
-
-        Ok(content.as_bytes().to_vec())
-    }
-}
-
-impl Aegis {
-    const ENCRYPTABLE: bool = true;
     const SCANNABLE: bool = false;
     const IDENTIFIER: &'static str = "aegis";
-    type Item = Item;
+    // type Item = Item;
 
     fn title() -> String {
         // Translators: This is for restoring a backup from the aegis Android app.
@@ -441,7 +382,7 @@ impl Aegis {
         gettext("From a JSON file containing plain-text or encrypted fields")
     }
 
-    fn restore_from_data(from: &[u8], key: Option<&str>) -> Result<Vec<Self::Item>> {
+    fn restore_from_data(from: &[u8], key: Option<&str>) -> Result<Vec<Item>> {
         // TODO check whether file / database is encrypted by aegis
         let aegis_root: Aegis = serde_json::de::from_slice(from)?;
         let mut items = Vec::new();
@@ -534,7 +475,10 @@ impl Aegis {
                         .map_err(|_| anyhow::anyhow!("Scrypt key derivation failed"))?;
 
                         // Now, try to decrypt the master key.
-                        let cipher = aes_gcm::Aes256Gcm::new_from_slice(&temp_key)?;
+                        let cipher = match aes_gcm::Aes256Gcm::new_from_slice(&temp_key) {
+                            Ok(c) => c,
+                            Err(e) => return Err(anyhow!("Could not create cipher from key")),
+                        };
                         let mut ciphertext: Vec<u8> = slot.key.to_vec();
                         ciphertext.append(&mut slot.key_params.tag.to_vec());
 
@@ -576,7 +520,10 @@ impl Aegis {
                 };
 
                 // Try to decrypt the database with this master key.
-                let cipher = aes_gcm::Aes256Gcm::new_from_slice(master_key)?;
+                let cipher = match aes_gcm::Aes256Gcm::new_from_slice(master_key) {
+                    Ok(c) => c,
+                    Err(e) => return Err(anyhow!("Could not create cipher from key")),
+                };
                 let plaintext = cipher
                     .decrypt(
                         aes_gcm::Nonce::from_slice(

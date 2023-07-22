@@ -564,8 +564,7 @@ mod tests {
 
     #[test]
     fn issuer_from_name() {
-        let data =
-            std::fs::read_to_string("./src/backup/tests/aegis_issuer_from_name.json").unwrap();
+        let data = std::fs::read_to_string("./test_databases/aegis_issuer_from_name.json").unwrap();
         let items = Aegis::restore_from_data(data.as_bytes(), None).unwrap();
 
         assert_eq!(items[0].issuer(), "issuer");
@@ -576,7 +575,7 @@ mod tests {
 
     #[test]
     fn parse_plain() {
-        let data = std::fs::read_to_string("./src/backup/tests/aegis_plain.json").unwrap();
+        let data = std::fs::read_to_string("./test_databases/aegis_plain.json").unwrap();
         let items = Aegis::restore_from_data(data.as_bytes(), None).unwrap();
 
         assert_eq!(items[0].account(), "Bob");
@@ -611,7 +610,7 @@ mod tests {
     fn parse_encrypted() {
         // See <https://github.com/beemdevelopment/Aegis/blob/master/app/src/test/resources/com/beemdevelopment/aegis/importers/aegis_encrypted.json>
         // for this example file.
-        let data = std::fs::read_to_string("./src/backup/tests/aegis_encrypted.json").unwrap();
+        let data = std::fs::read_to_string("./test_databases/aegis_encrypted.json").unwrap();
         let items = Aegis::restore_from_data(data.as_bytes(), Some("test")).unwrap();
 
         assert_eq!(items[0].account(), "Mason");

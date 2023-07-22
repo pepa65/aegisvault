@@ -7,3 +7,14 @@ description = "Library for parsing and dumping Aegis vaults"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+aes-gcm = "0.10"
+anyhow = "1.0"
+data-encoding = "2.3"
+gettext-rs = {version = "0.7", features = ["gettext-system"]}
+hex = {version = "0.4.3", features = ["serde"]}
+scrypt = {version = "0.11", default-features = false}
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+uuid = {version = "1.0", features = ["v4"]}
+rand = "0.8"
+zeroize = {version = "1", features = ["zeroize_derive"]}

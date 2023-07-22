@@ -14,12 +14,10 @@
 use aes_gcm::{aead::Aead, KeyInit};
 use anyhow::{Context, Result};
 use gettextrs::gettext;
-use gtk::prelude::*;
 use rand::RngCore;
 use serde::{Deserialize, Serialize};
 use zeroize::{Zeroize, ZeroizeOnDrop};
 
-use super::{Backupable, Restorable, RestorableItem};
 use crate::models::{Account, Algorithm, Method, Provider, ProvidersModel};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -353,7 +351,7 @@ pub struct Detail {
     pub counter: Option<u32>,
 }
 
-impl RestorableItem for Item {
+impl Item {
     fn account(&self) -> String {
         self.label.clone()
     }
@@ -390,7 +388,7 @@ impl RestorableItem for Item {
     }
 }
 
-impl Backupable for Aegis {
+impl Aegis {
     const ENCRYPTABLE: bool = true;
     const IDENTIFIER: &'static str = "aegis";
 
@@ -428,7 +426,7 @@ impl Backupable for Aegis {
     }
 }
 
-impl Restorable for Aegis {
+impl Aegis {
     const ENCRYPTABLE: bool = true;
     const SCANNABLE: bool = false;
     const IDENTIFIER: &'static str = "aegis";
@@ -451,10 +449,9 @@ impl Restorable for Aegis {
         // Check whether file is encrypted or in plaintext
         match aegis_root {
             Aegis::Plaintext(plain_text) => {
-                tracing::info!(
+                println!(
                     "Found unencrypted aegis vault with version {} and database version {}.",
-                    plain_text.version,
-                    plain_text.db.version
+                    plain_text.version, plain_text.db.version
                 );
 
                 // Check for correct aegis vault version and correct database version.
@@ -478,7 +475,7 @@ impl Restorable for Aegis {
                 }
             }
             Aegis::Encrypted(encrypted) => {
-                tracing::info!(
+                println!(
                     "Found encrypted aegis vault with version {}.",
                     encrypted.version
                 );
@@ -512,7 +509,7 @@ impl Restorable for Aegis {
                     .iter()
                     .filter(|slot| slot.type_ == 1) // We don't handle biometric slots for now
                     .map(|slot| -> Result<Vec<u8>> {
-                        tracing::info!("Found possible master key with UUID {}.", slot.uuid);
+                        println!("Found possible master key with UUID {}.", slot.uuid);
 
                         // Create parameters for scrypt function and derive decryption key for
                         // master key
@@ -556,7 +553,7 @@ impl Restorable for Aegis {
                     .filter_map(|x| match x {
                         Ok(x) => Some(x),
                         Err(e) => {
-                            tracing::error!("Decrypting master key failed: {:?}", e);
+                            println!("Decrypting master key failed: {:?}", e);
                             None
                         }
                     })
@@ -564,13 +561,13 @@ impl Restorable for Aegis {
 
                 // Choose the first valid master key. I don't think there are aegis
                 // installations with two valid password slots.
-                tracing::info!(
+                println!(
                     "Found {} valid password slots / master keys.",
                     master_keys.len()
                 );
                 let master_key = match master_keys.first() {
                     Some(x) => {
-                        tracing::info!("Using only the first valid key slot / master key.");
+                        println!("Using only the first valid key slot / master key.");
                         x
                     }
                     None => anyhow::bail!(
@@ -595,7 +592,7 @@ impl Restorable for Aegis {
                     .context("Deserialize decrypted database failed")?;
 
                 // Check version of the database
-                tracing::info!("Found aegis database with version {}.", db.version);
+                println!("Found aegis database with version {}.", db.version);
                 if encrypted.version > 2 {
                     anyhow::bail!(
                         "Aegis database version expected to be 1 or 2. Found {} instead.",

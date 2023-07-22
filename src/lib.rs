@@ -1,2 +1,2 @@
-mod aegis;
 mod algorithm;
+mod vault;

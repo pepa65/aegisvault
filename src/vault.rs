@@ -9,7 +9,7 @@
 //!
 //! Exported files by this module cannot be decrypted by the python script
 //! provided in the aegis repository (<https://github.com/beemdevelopment/Aegis/blob/master/docs/decrypt.py>). However,
-//! aegis android app is able to read the files! See line 173 for a discussion.
+//! aegis android app is able to read the files!
 
 use aes_gcm::{aead::Aead, KeyInit};
 use anyhow::{anyhow, Context, Result};

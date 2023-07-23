@@ -157,7 +157,7 @@ impl Aegis {
         Ok(())
     }
 
-    fn restore_from_data(from: &[u8], key: Option<&str>) -> Result<Vec<Item>> {
+    pub fn restore_from_data(from: &[u8], key: Option<&str>) -> Result<Vec<Item>> {
         // TODO check whether file / database is encrypted by aegis
         let aegis_root: Aegis = serde_json::de::from_slice(from)?;
         let mut items = Vec::new();
@@ -474,7 +474,7 @@ pub struct Item {
 }
 
 impl Item {
-    pub fn fix_empty_issuer(&mut self) -> Result<()> {
+    fn fix_empty_issuer(&mut self) -> Result<()> {
         if self.issuer.is_none() {
             let mut vals: Vec<&str> = self.label.split('@').collect();
             if vals.len() > 1 {
@@ -487,38 +487,38 @@ impl Item {
         Ok(())
     }
 
-    fn account(&self) -> String {
+    pub fn account(&self) -> String {
         self.label.clone()
     }
 
-    fn issuer(&self) -> String {
+    pub fn issuer(&self) -> String {
         self.issuer
             .as_ref()
             .map(ToOwned::to_owned)
             .unwrap_or_default()
     }
 
-    fn secret(&self) -> String {
+    pub fn secret(&self) -> String {
         self.info.secret.clone()
     }
 
-    fn period(&self) -> Option<u32> {
+    pub fn period(&self) -> Option<u32> {
         self.info.period
     }
 
-    fn method(&self) -> Method {
+    pub fn method(&self) -> Method {
         self.method
     }
 
-    fn algorithm(&self) -> Algorithm {
+    pub fn algorithm(&self) -> Algorithm {
         self.info.algorithm
     }
 
-    fn digits(&self) -> Option<u32> {
+    pub fn digits(&self) -> Option<u32> {
         Some(self.info.digits)
     }
 
-    fn counter(&self) -> Option<u32> {
+    pub fn counter(&self) -> Option<u32> {
         self.info.counter
     }
 }

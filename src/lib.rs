@@ -1,2 +1,2 @@
-mod algorithm;
-mod vault;
+pub mod algorithm;
+pub mod vault;

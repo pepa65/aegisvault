@@ -13,7 +13,6 @@
 
 use aes_gcm::{aead::Aead, KeyInit};
 use anyhow::{anyhow, Context, Result};
-use gettextrs::gettext;
 use rand::RngCore;
 use serde::{Deserialize, Serialize};
 use zeroize::{Zeroize, ZeroizeOnDrop};
@@ -367,15 +366,6 @@ impl Item {
 }
 
 impl Aegis {
-    fn title() -> String {
-        // Translators: This is for restoring a backup from the aegis Android app.
-        gettext("Aegis")
-    }
-
-    fn subtitle() -> String {
-        gettext("From a JSON file containing plain-text or encrypted fields")
-    }
-
     fn restore_from_data(from: &[u8], key: Option<&str>) -> Result<Vec<Item>> {
         // TODO check whether file / database is encrypted by aegis
         let aegis_root: Aegis = serde_json::de::from_slice(from)?;

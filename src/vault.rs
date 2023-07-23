@@ -453,23 +453,32 @@ impl Default for Database {
 }
 
 /// An OTP Entry
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Default)]
 pub struct Item {
+    // The unique identifier for the item
     #[serde(rename = "type")]
     pub method: Method,
-    // UUID is omitted
+
+    // The unique identifier for the item
+    pub uuid: String,
+
     #[serde(rename = "name")]
     pub label: String,
+
     pub issuer: Option<String>,
+
     // TODO tags are not imported/exported right now.
     #[serde(rename = "group")]
     pub tags: Option<String>,
+
     // Note is omitted
     // Icon:
     // TODO: Aegis encodes icons as JPEG's encoded in Base64 with padding. Does authenticator
     // support this?
     #[serde(rename = "icon")]
     pub thumbnail: Option<String>,
+
+    /// The configuration of the algorithm
     pub info: Detail,
 }
 
@@ -487,7 +496,7 @@ impl Item {
         Ok(())
     }
 
-    pub fn account(&self) -> String {
+    pub fn label(&self) -> String {
         self.label.clone()
     }
 
@@ -524,7 +533,7 @@ impl Item {
 }
 
 /// OTP Entry Details
-#[derive(Debug, Serialize, Deserialize, Zeroize, ZeroizeOnDrop)]
+#[derive(Debug, Default, Serialize, Deserialize, Zeroize, ZeroizeOnDrop)]
 pub struct Detail {
     pub secret: String,
     #[serde(rename = "algo")]
@@ -548,9 +557,9 @@ mod tests {
         let items = Aegis::restore_from_data(data.as_bytes(), None).unwrap();
 
         assert_eq!(items[0].issuer(), "issuer");
-        assert_eq!(items[0].account(), "missing-issuer");
+        assert_eq!(items[0].label(), "missing-issuer");
         assert_eq!(items[1].issuer(), "issuer");
-        assert_eq!(items[1].account(), "missing-issuer@domain.com");
+        assert_eq!(items[1].label(), "missing-issuer@domain.com");
     }
 
     #[test]
@@ -558,7 +567,7 @@ mod tests {
         let data = std::fs::read_to_string("./test_databases/aegis_plain.json").unwrap();
         let items = Aegis::restore_from_data(data.as_bytes(), None).unwrap();
 
-        assert_eq!(items[0].account(), "Bob");
+        assert_eq!(items[0].label(), "Bob");
         assert_eq!(items[0].issuer(), "Google");
         assert_eq!(items[0].secret(), "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567");
         assert_eq!(items[0].period(), Some(30));
@@ -567,7 +576,7 @@ mod tests {
         assert_eq!(items[0].counter(), None);
         assert_eq!(items[0].method(), Method::TOTP);
 
-        assert_eq!(items[1].account(), "Benjamin");
+        assert_eq!(items[1].label(), "Benjamin");
         assert_eq!(items[1].issuer(), "Air Canada");
         assert_eq!(items[1].secret(), "KUVJJOM753IHTNDSZVCNKL7GII");
         assert_eq!(items[1].period(), None);
@@ -576,7 +585,7 @@ mod tests {
         assert_eq!(items[1].counter(), Some(50));
         assert_eq!(items[1].method(), Method::HOTP);
 
-        assert_eq!(items[2].account(), "Sophia");
+        assert_eq!(items[2].label(), "Sophia");
         assert_eq!(items[2].issuer(), "Boeing");
         assert_eq!(items[2].secret(), "JRZCL47CMXVOQMNPZR2F7J4RGI");
         assert_eq!(items[2].period(), Some(30));
@@ -593,7 +602,7 @@ mod tests {
         let data = std::fs::read_to_string("./test_databases/aegis_encrypted.json").unwrap();
         let items = Aegis::restore_from_data(data.as_bytes(), Some("test")).unwrap();
 
-        assert_eq!(items[0].account(), "Mason");
+        assert_eq!(items[0].label(), "Mason");
         assert_eq!(items[0].issuer(), "Deno");
         assert_eq!(items[0].secret(), "4SJHB4GSD43FZBAI7C2HLRJGPQ");
         assert_eq!(items[0].period(), Some(30));
@@ -602,7 +611,7 @@ mod tests {
         assert_eq!(items[0].counter(), None);
         assert_eq!(items[0].method(), Method::TOTP);
 
-        assert_eq!(items[3].account(), "James");
+        assert_eq!(items[3].label(), "James");
         assert_eq!(items[3].issuer(), "Issuu");
         assert_eq!(items[3].secret(), "YOOMIXWS5GN6RTBPUFFWKTW5M4");
         assert_eq!(items[3].period(), None);
@@ -611,7 +620,7 @@ mod tests {
         assert_eq!(items[3].counter(), Some(1));
         assert_eq!(items[3].method(), Method::HOTP);
 
-        assert_eq!(items[6].account(), "Sophia");
+        assert_eq!(items[6].label(), "Sophia");
         assert_eq!(items[6].issuer(), "Boeing");
         assert_eq!(items[6].secret(), "JRZCL47CMXVOQMNPZR2F7J4RGI");
         assert_eq!(items[6].period(), Some(30));
@@ -621,5 +630,55 @@ mod tests {
         assert_eq!(items[6].method(), Method::Steam);
     }
 
-    // TODO: add tests for importing
+    #[test]
+    fn encrypt() {
+        let mut aegis_root = Aegis::default();
+        let password = "my-super-secure-password";
+
+        let mut otp_item = Item::default();
+        otp_item.method = Method::TOTP;
+        otp_item.label = "Mason".to_string();
+        otp_item.issuer = Some("Deno".to_string());
+        otp_item.info.secret = "4SJHB4GSD43FZBAI7C2HLRJGPQ".to_string();
+        otp_item.info.period = Some(30);
+        otp_item.info.digits = 6;
+        otp_item.info.counter = None;
+        aegis_root.add_item(otp_item);
+
+        let mut otp_item = Item::default();
+        otp_item.method = Method::HOTP;
+        otp_item.label = "James".to_string();
+        otp_item.issuer = Some("Issuu".to_string());
+        otp_item.info.secret = "YOOMIXWS5GN6RTBPUFFWKTW5M4".to_string();
+        otp_item.info.algorithm = Algorithm::SHA1;
+        otp_item.info.period = None;
+        otp_item.info.digits = 6;
+        otp_item.info.counter = Some(1);
+        aegis_root.add_item(otp_item);
+
+        aegis_root.encrypt(password).unwrap();
+
+        let raw_encrypted_vault = serde_json::ser::to_string_pretty(&aegis_root).unwrap();
+
+        let items =
+            Aegis::restore_from_data(raw_encrypted_vault.as_bytes(), Some(password)).unwrap();
+
+        assert_eq!(items[0].label(), "Mason");
+        assert_eq!(items[0].issuer(), "Deno");
+        assert_eq!(items[0].secret(), "4SJHB4GSD43FZBAI7C2HLRJGPQ");
+        assert_eq!(items[0].period(), Some(30));
+        assert_eq!(items[0].algorithm(), Algorithm::SHA1);
+        assert_eq!(items[0].digits(), Some(6));
+        assert_eq!(items[0].counter(), None);
+        assert_eq!(items[0].method(), Method::TOTP);
+
+        assert_eq!(items[1].label(), "James");
+        assert_eq!(items[1].issuer(), "Issuu");
+        assert_eq!(items[1].secret(), "YOOMIXWS5GN6RTBPUFFWKTW5M4");
+        assert_eq!(items[1].period(), None);
+        assert_eq!(items[1].algorithm(), Algorithm::SHA1);
+        assert_eq!(items[1].digits(), Some(6));
+        assert_eq!(items[1].counter(), Some(1));
+        assert_eq!(items[1].method(), Method::HOTP);
+    }
 }

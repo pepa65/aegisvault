@@ -294,7 +294,6 @@ pub struct Item {
     // Icon:
     // TODO: Aegis encodes icons as JPEG's encoded in Base64 with padding. Does authenticator
     // support this?
-    // TODO tags are not imported/exported right now.
     #[serde(rename = "icon")]
     pub thumbnail: Option<String>,
     pub info: Detail,

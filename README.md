@@ -11,7 +11,7 @@ The codebase was initially imported from [the Gnome Authenticator project](https
 
 ## Usage
 ### Save a database
-```
+```rust
 use aegis_vault::{
     vault::{Aegis, Item},
     algorithm::{Method}

@@ -109,7 +109,7 @@ impl Aegis {
         // Encrypt new master key with derived key
         let cipher = match aes_gcm::Aes256Gcm::new_from_slice(&derived_key) {
             Ok(c) => c,
-            Err(e) => return Err(anyhow!("Could not create cipher from key")),
+            Err(_) => return Err(anyhow!("Could not create cipher from key")),
         };
         let mut ciphertext: Vec<u8> = cipher
             .encrypt(
@@ -130,7 +130,7 @@ impl Aegis {
                 .to_vec();
             let cipher = match aes_gcm::Aes256Gcm::new_from_slice(&master_key) {
                 Ok(c) => c,
-                Err(e) => return Err(anyhow!("Could not create cipher from master key")),
+                Err(_) => return Err(anyhow!("Could not create cipher from master key")),
             };
             let mut ciphertext: Vec<u8> = cipher
                 .encrypt(
@@ -311,24 +311,7 @@ impl Item {
         }
         Ok(())
     }
-}
 
-/// OTP Entry Details
-#[derive(Debug, Serialize, Deserialize, Zeroize, ZeroizeOnDrop)]
-pub struct Detail {
-    pub secret: String,
-    #[serde(rename = "algo")]
-    #[zeroize(skip)]
-    pub algorithm: Algorithm,
-    #[zeroize(skip)]
-    pub digits: u32,
-    #[zeroize(skip)]
-    pub period: Option<u32>,
-    #[zeroize(skip)]
-    pub counter: Option<u32>,
-}
-
-impl Item {
     fn account(&self) -> String {
         self.label.clone()
     }
@@ -363,6 +346,21 @@ impl Item {
     fn counter(&self) -> Option<u32> {
         self.info.counter
     }
+}
+
+/// OTP Entry Details
+#[derive(Debug, Serialize, Deserialize, Zeroize, ZeroizeOnDrop)]
+pub struct Detail {
+    pub secret: String,
+    #[serde(rename = "algo")]
+    #[zeroize(skip)]
+    pub algorithm: Algorithm,
+    #[zeroize(skip)]
+    pub digits: u32,
+    #[zeroize(skip)]
+    pub period: Option<u32>,
+    #[zeroize(skip)]
+    pub counter: Option<u32>,
 }
 
 impl Aegis {
@@ -461,7 +459,7 @@ impl Aegis {
                         // Now, try to decrypt the master key.
                         let cipher = match aes_gcm::Aes256Gcm::new_from_slice(&temp_key) {
                             Ok(c) => c,
-                            Err(e) => return Err(anyhow!("Could not create cipher from key")),
+                            Err(_) => return Err(anyhow!("Could not create cipher from key")),
                         };
                         let mut ciphertext: Vec<u8> = slot.key.to_vec();
                         ciphertext.append(&mut slot.key_params.tag.to_vec());
@@ -506,7 +504,7 @@ impl Aegis {
                 // Try to decrypt the database with this master key.
                 let cipher = match aes_gcm::Aes256Gcm::new_from_slice(master_key) {
                     Ok(c) => c,
-                    Err(e) => return Err(anyhow!("Could not create cipher from key")),
+                    Err(_) => return Err(anyhow!("Could not create cipher from key")),
                 };
                 let plaintext = cipher
                     .decrypt(

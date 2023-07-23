@@ -367,11 +367,6 @@ impl Item {
 }
 
 impl Aegis {
-    const ENCRYPTABLE: bool = true;
-    const SCANNABLE: bool = false;
-    const IDENTIFIER: &'static str = "aegis";
-    // type Item = Item;
-
     fn title() -> String {
         // Translators: This is for restoring a backup from the aegis Android app.
         gettext("Aegis")

@@ -331,6 +331,16 @@ impl Aegis {
             }
         }
     }
+
+    /// Save the encrypted vault to a file
+    pub fn save(&mut self, destination: &mut dyn std::io::Write, password: &str) -> Result<()> {
+        self.encrypt(password).unwrap();
+
+        let raw_encrypted_vault = serde_json::ser::to_string_pretty(&self).unwrap();
+        destination.write(raw_encrypted_vault.as_bytes())?;
+        destination.flush()?;
+        Ok(())
+    }
 }
 
 /// Header of the Encrypted Aegis JSON File

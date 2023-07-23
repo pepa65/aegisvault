@@ -1,6 +1,7 @@
 # aegis-vault-rs
 [![Build Status](https://github.com/louib/aegis-vault-rs/actions/workflows/merge.yml/badge.svg?branch=main)](https://github.com/louib/aegis-vault-rs/actions/workflows/merge.yml)
 [![dependency status](https://deps.rs/repo/github/louib/aegis-vault-rs/status.svg)](https://deps.rs/repo/github/louib/aegis-vault-rs)
+[![Crates.io](https://img.shields.io/crates/v/aegis-vault.svg)](https://crates.io/crates/aegis-vault)
 [![License file](https://img.shields.io/github/license/louib/aegis-vault-rs)](https://github.com/louib/aegis-vault-rs/blob/main/LICENSE)
 
 Library for parsing and dumping Aegis vaults

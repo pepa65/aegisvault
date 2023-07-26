@@ -14,7 +14,7 @@ The codebase was initially imported from [the Gnome Authenticator project](https
 ### Save a database
 ```rust
 use aegis_vault::{
-    vault::{Aegis, Item},
+    vault::{Aegis, Entry},
     algorithm::{Method}
 };
 use anyhow::Result;
@@ -23,15 +23,15 @@ use std::fs::File;
 fn main() -> Result<()> {
     let mut vault = Aegis::default();
 
-    let mut otp_item = Item::default();
-    otp_item.method = Method::TOTP;
-    otp_item.label = "Mason".to_string();
-    otp_item.issuer = Some("Deno".to_string());
-    otp_item.info.secret = "4SJHB4GSD43FZBAI7C2HLRJGPQ".to_string();
-    otp_item.info.period = Some(30);
-    otp_item.info.digits = 6;
-    otp_item.info.counter = None;
-    vault.add_item(otp_item);
+    let mut otp_entry = Entry::default();
+    otp_entry.method = Method::TOTP;
+    otp_entry.label = "Mason".to_string();
+    otp_entry.issuer = Some("Deno".to_string());
+    otp_entry.info.secret = "4SJHB4GSD43FZBAI7C2HLRJGPQ".to_string();
+    otp_entry.info.period = Some(30);
+    otp_entry.info.digits = 6;
+    otp_entry.info.counter = None;
+    vault.add_entry(otp_entry);
 
     vault.save(
       &mut File::create("my-aegis-vault.json")?,

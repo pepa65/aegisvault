@@ -466,11 +466,11 @@ impl Default for Database {
 #[derive(Debug, Serialize, Deserialize, Default)]
 pub struct Entry {
     // The unique identifier for the entry
+    pub uuid: String,
+
+    // The method used to derive the temporary token
     #[serde(rename = "type")]
     pub method: Method,
-
-    // The unique identifier for the entry
-    pub uuid: String,
 
     #[serde(rename = "name")]
     pub label: String,

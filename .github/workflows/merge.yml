@@ -47,8 +47,22 @@ jobs:
         run: |
           echo "The next version is ${{ steps.get-next-version.outputs.version }}"
 
+      - name: Patch the Cargo version number
+        run: |
+          echo "TODO"
+
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+
+      - name: Publish new Cargo version
+        run: |
+          cargo publish --dry-run
+
       - name: Tag the next version number
         run: |
-          git tag "v${{ steps.get-next-version.outputs.version }}" "${{ github.sha }}"
-          echo "not pushing for now"
-          # git push --tags
+          new_tag_name="v${{ steps.get-next-version.outputs.version }}"
+          git tag "$new_tag_name" "${{ github.sha }}"
+          git push origin "$new_tag_name"

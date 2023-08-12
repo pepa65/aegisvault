@@ -19,3 +19,21 @@ jobs:
           override: true
       - name: run cargo test
         run: cargo test
+
+  release:
+    name: Publish a new release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: paulhatch/semantic-version@v5.0.2
+        with:
+          tag_prefix: "v"
+          major_pattern: "/^breaking change:/"
+          major_regexp_flags: "ig"
+          minor_pattern: "/^feat:/"
+          minor_regexp_flags: "ig"
+          version_format: "${major}.${minor}.${patch}"
+          bump_each_commit: false
+          search_commit_body: true
+          enable_prerelease_mode: true
+
+      - run: echo "The next version is ${{ steps.get-next-version.outputs.version }}"

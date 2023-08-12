@@ -26,6 +26,10 @@ jobs:
     #   test
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
       - uses: paulhatch/semantic-version@976ff820fcdca81ffc95e385a07b7eff05ddccc3
         id: get-next-version
         with:
@@ -42,3 +46,4 @@ jobs:
       - run: echo "The next version is ${{ steps.get-next-version.outputs.version }}"
       - run: echo "The previous version is ${{ steps.get-next-version.outputs.previous_version }}"
       - run: echo "The version tag is ${{ steps.get-next-version.outputs.version_tag }}"
+      - run: echo "The increment is ${{ steps.get-next-version.outputs.increment }}"

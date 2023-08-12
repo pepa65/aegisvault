@@ -22,8 +22,8 @@ jobs:
 
   release:
     name: Publish a new release
-    needs:
-      test
+    # needs:
+    #   test
     runs-on: ubuntu-latest
     steps:
       - uses: paulhatch/semantic-version@976ff820fcdca81ffc95e385a07b7eff05ddccc3

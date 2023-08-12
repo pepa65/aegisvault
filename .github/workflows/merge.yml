@@ -26,7 +26,7 @@ jobs:
       test
     runs-on: ubuntu-latest
     steps:
-      - uses: paulhatch/semantic-version@v5.1
+      - uses: paulhatch/semantic-version@976ff820fcdca81ffc95e385a07b7eff05ddccc3
         with:
           tag_prefix: "v"
           major_pattern: "/^breaking change:/"

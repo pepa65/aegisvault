@@ -39,3 +39,5 @@ jobs:
           enable_prerelease_mode: true
 
       - run: echo "The next version is ${{ steps.get-next-version.outputs.version }}"
+      - run: echo "The previous version is ${{ steps.get-next-version.outputs.previous_version }}"
+      - run: echo "The version tag is ${{ steps.get-next-version.outputs.version_tag }}"

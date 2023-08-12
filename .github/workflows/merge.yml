@@ -20,7 +20,7 @@ jobs:
       - name: run cargo test
         run: cargo test
 
-  release:
+  get-next-version-number:
     name: Publish a new release
     # needs:
     #   test
@@ -31,7 +31,7 @@ jobs:
           fetch-depth: 0
 
       - uses: paulhatch/semantic-version@976ff820fcdca81ffc95e385a07b7eff05ddccc3
-        id: get-next-version
+        id: semantic-version
         with:
           tag_prefix: "v"
           major_pattern: "/^breaking change:/"
@@ -43,9 +43,20 @@ jobs:
           search_commit_body: true
           enable_prerelease_mode: true
 
+  release:
+    name: Publish a new release
+    needs:
+      get-next-version-number
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+
       - name: Print the next version number
         run: |
-          echo "The next version is ${{ steps.get-next-version.outputs.version }}"
+          echo "The next version is ${{ needs.get-next-version-number.steps.semantic-version.outputs.version }}"
 
       - name: Patch the Cargo version number
         run: |
@@ -65,4 +76,4 @@ jobs:
         run: |
           new_tag_name="v${{ steps.get-next-version.outputs.version }}"
           git tag "$new_tag_name" "${{ github.sha }}"
-          git push origin "$new_tag_name"
+          # git push origin "$new_tag_name"

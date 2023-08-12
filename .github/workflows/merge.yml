@@ -43,7 +43,12 @@ jobs:
           search_commit_body: true
           enable_prerelease_mode: true
 
-      - run: echo "The next version is ${{ steps.get-next-version.outputs.version }}"
-      - run: echo "The previous version is ${{ steps.get-next-version.outputs.previous_version }}"
-      - run: echo "The version tag is ${{ steps.get-next-version.outputs.version_tag }}"
-      - run: echo "The increment is ${{ steps.get-next-version.outputs.increment }}"
+      - name: Print the next version number
+        run: |
+          echo "The next version is ${{ steps.get-next-version.outputs.version }}"
+
+      - name: Tag the next version number
+        run: |
+          git tag "v${{ steps.get-next-version.outputs.version }}" "${{ github.sha }}"
+          echo "not pushing for now"
+          # git push --tags

@@ -49,6 +49,8 @@ jobs:
       get-next-version
       # test
     runs-on: ubuntu-latest
+    env:
+      next-version: ${{ needs.get-next-version.outputs.version }}
 
     steps:
       - uses: actions/checkout@v3
@@ -57,7 +59,7 @@ jobs:
 
       - name: Print the next version
         run: |
-          echo "The next version is ${{ needs.get-next-version.outputs.version }}"
+          echo "The next version is ${{ env.next-version }}"
 
       - name: Patch the Cargo version
         run: |
@@ -75,6 +77,6 @@ jobs:
 
       - name: Tag the next version
         run: |
-          new_tag_name="v${{ steps.get-next-version.outputs.version }}"
+          new_tag_name="v${{ env.next-version }}"
           git tag "$new_tag_name" "${{ github.sha }}"
           # git push origin "$new_tag_name"

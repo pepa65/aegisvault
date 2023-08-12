@@ -39,7 +39,7 @@ jobs:
           minor_pattern: "/^feat:/"
           minor_regexp_flags: "ig"
           version_format: "${major}.${minor}.${patch}"
-          bump_each_commit: true
+          bump_each_commit: false
           search_commit_body: true
           enable_prerelease_mode: true
 

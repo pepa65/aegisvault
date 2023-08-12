@@ -8,7 +8,7 @@ documentation = "https://docs.rs/aegis-vault"
 
 license = "GPL-3.0-only"
 
-version = "0.2.0"
+version = "0.0.0-placeholder-version"
 edition = "2021"
 
 readme = "README.md"

@@ -48,6 +48,8 @@ jobs:
     needs:
       get-next-version
       # test
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     env:
       next-version: ${{ needs.get-next-version.outputs.version }}

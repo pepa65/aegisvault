@@ -20,11 +20,11 @@ jobs:
       - name: run cargo test
         run: cargo test
 
-  get-next-version-number:
-    name: Publish a new release
-    # needs:
-    #   test
+  get-next-version:
+    name: Get the next version
     runs-on: ubuntu-latest
+    outputs:
+      version : ${{ steps.semantic-version.outputs.version }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -46,7 +46,8 @@ jobs:
   release:
     name: Publish a new release
     needs:
-      get-next-version-number
+      get-next-version
+      # test
     runs-on: ubuntu-latest
 
     steps:
@@ -54,11 +55,11 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Print the next version number
+      - name: Print the next version
         run: |
-          echo "The next version is ${{ needs.get-next-version-number.steps.semantic-version.outputs.version }}"
+          echo "The next version is ${{ needs.get-next-version.outputs.version }}"
 
-      - name: Patch the Cargo version number
+      - name: Patch the Cargo version
         run: |
           echo "TODO"
 
@@ -72,7 +73,7 @@ jobs:
         run: |
           cargo publish --dry-run
 
-      - name: Tag the next version number
+      - name: Tag the next version
         run: |
           new_tag_name="v${{ steps.get-next-version.outputs.version }}"
           git tag "$new_tag_name" "${{ github.sha }}"

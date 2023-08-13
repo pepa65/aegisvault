@@ -46,8 +46,8 @@ jobs:
   release:
     name: Publish a new release
     needs:
-      get-next-version
-      # test
+      - get-next-version
+      - test
     permissions:
       contents: write
     runs-on: ubuntu-latest

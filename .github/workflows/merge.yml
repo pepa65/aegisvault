@@ -76,7 +76,7 @@ jobs:
 
       - name: Publish new Cargo version
         run: |
-          cargo publish --dry-run
+          cargo publish --dry-run --allow-dirty
 
       - name: Tag the next version
         run: |

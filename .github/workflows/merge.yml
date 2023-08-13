@@ -76,7 +76,7 @@ jobs:
 
       - name: Publish new Cargo version
         run: |
-          cargo publish --dry-run --allow-dirty
+          cargo publish --allow-dirty --token ${{ secrets.CARGO_PUBLISH_TOKEN }}
 
       - name: Tag the next version
         run: |

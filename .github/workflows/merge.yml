@@ -75,9 +75,9 @@ jobs:
           override: true
 
       - name: Publish new Cargo version
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_PUBLISH_TOKEN }}
         run: |
-          cargo login ${{ secrets.CARGO_PUBLISH_TOKEN }}
-          git diff
           cargo publish --allow-dirty
 
       - name: Tag the next version

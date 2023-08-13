@@ -65,7 +65,8 @@ jobs:
 
       - name: Patch the Cargo version
         run: |
-          echo "TODO"
+          sed -i 's/0.0.0-placeholder-version/${{ env.next-version }}/' Cargo.toml
+          git diff
 
       - uses: actions-rs/toolchain@v1
         with:

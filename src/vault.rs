@@ -86,7 +86,7 @@ impl Aegis {
 
         // We only support password encrypted database so far so we don't have to do any
         // checks for the slot type
-        let mut password_slot = &mut header.slots.as_mut().unwrap().get_mut(0).unwrap();
+        let password_slot = &mut header.slots.as_mut().unwrap().get_mut(0).unwrap();
         // Derive key from given password
         let mut derived_key: [u8; 32] = [0u8; 32];
         let params = scrypt::Params::new(

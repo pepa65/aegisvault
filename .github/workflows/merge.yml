@@ -76,7 +76,9 @@ jobs:
 
       - name: Publish new Cargo version
         env:
-          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_PUBLISH_TOKEN }}
+          # This token needs to be created with the publish-update scope.
+          # The other scopes are not necessary.
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
         run: |
           cargo publish --allow-dirty
 

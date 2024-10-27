@@ -15,6 +15,8 @@ jobs:
     name: Lint Commit Messages
     runs-on: ubuntu-latest
     steps:
+      - name: load musl
+        run: rustup target add x86_64-unknown-linux-musl
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
@@ -24,6 +26,8 @@ jobs:
     name: Build Doc
     runs-on: ubuntu-latest
     steps:
+      - name: load musl
+        run: rustup target add x86_64-unknown-linux-musl
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
@@ -39,6 +43,8 @@ jobs:
     name: Test Suite
     runs-on: ubuntu-latest
     steps:
+      - name: load musl
+        run: rustup target add x86_64-unknown-linux-musl
       - uses: actions/checkout@v3
       - uses: actions-rs/toolchain@v1
         with:
@@ -52,6 +58,8 @@ jobs:
     name: Code Formatting
     runs-on: ubuntu-latest
     steps:
+      - name: load musl
+        run: rustup target add x86_64-unknown-linux-musl
       - uses: actions/checkout@v3
       - uses: actions-rs/toolchain@v1
         with:

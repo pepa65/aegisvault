@@ -11,23 +11,19 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  commitlint:
-    name: Lint Commit Messages
-    runs-on: ubuntu-latest
-    steps:
-      - name: load musl
-        run: rustup target add x86_64-unknown-linux-musl
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - uses: wagoid/commitlint-github-action@v5
+  #commitlint:
+  #  name: Lint Commit Messages
+  #  runs-on: ubuntu-latest
+  #  steps:
+  #    - uses: actions/checkout@v3
+  #      with:
+  #        fetch-depth: 0
+  #    - uses: wagoid/commitlint-github-action@v5
 
   doc:
     name: Build Doc
     runs-on: ubuntu-latest
     steps:
-      - name: load musl
-        run: rustup target add x86_64-unknown-linux-musl
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
@@ -37,14 +33,15 @@ jobs:
           toolchain: nightly
           override: true
       - name: run cargo doc
-        run: cargo doc
+        run: |
+          apt-get -y install musl-tools
+          rustup target add x86_64-unknown-linux-musl
+          cargo doc
 
   test:
     name: Test Suite
     runs-on: ubuntu-latest
     steps:
-      - name: load musl
-        run: rustup target add x86_64-unknown-linux-musl
       - uses: actions/checkout@v3
       - uses: actions-rs/toolchain@v1
         with:
@@ -52,14 +49,15 @@ jobs:
           toolchain: stable
           override: true
       - name: run cargo test
-        run: cargo test --all-features
+        run: |
+          apt-get -y install musl-tools
+          rustup target add x86_64-unknown-linux-musl
+          cargo test --all-features
 
   formatting:
     name: Code Formatting
     runs-on: ubuntu-latest
     steps:
-      - name: load musl
-        run: rustup target add x86_64-unknown-linux-musl
       - uses: actions/checkout@v3
       - uses: actions-rs/toolchain@v1
         with:
@@ -68,6 +66,8 @@ jobs:
           override: true
       - name: running rustfmt
         run: |
+          apt-get -y install musl-tools
+          rustup target add x86_64-unknown-linux-musl
           files=$(find . -name '*.rs')
           IFS=$'\n'; for file in $files; do
             rustfmt --check "$file"

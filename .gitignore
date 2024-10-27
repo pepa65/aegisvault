@@ -1,3 +1,4 @@
 /target
 /Cargo.lock
-my-aegis-vault.json
+/aegisvault
+/aegis.json

@@ -1,25 +1,11 @@
 [package]
-name = "aegis-vault"
-description = "Library for parsing and dumping Aegis vaults"
-
-homepage = "https://github.com/louib/aegis-vault-rs"
-repository = "https://github.com/louib/aegis-vault-rs"
+name = "aegisvault"
+description = "Convert otpauth URI file to Encrypted Aegis vault JSON file"
+repository = "https://github.com/pepa65/aegisvault"
 documentation = "https://docs.rs/aegis-vault"
-
 license = "GPL-3.0-only"
-
-version = "0.0.0-placeholder-version"
+version = "0.1.0"
 edition = "2021"
-
-readme = "README.md"
-
-include = [
-  "src/",
-  "README.md",
-  "LICENSE",
-]
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 aes-gcm = "0.10"
@@ -33,3 +19,12 @@ uuid = {version = "1.0", features = ["v4"]}
 rand = "0.8"
 ring = "0.17"
 zeroize = {version = "1", features = ["zeroize_derive"]}
+urlencoding = "2.1.3"
+url = "2.5.2"
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

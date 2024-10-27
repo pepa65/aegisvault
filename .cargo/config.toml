@@ -1,0 +1,8 @@
+[alias]
+rel = "build --release"
+
+[build]
+target = "x86_64-unknown-linux-musl"
+
+[target.'cfg(all())']
+rustflags = [ "-Aclippy::needless_return", "-Ctarget-feature=+crt-static" ]

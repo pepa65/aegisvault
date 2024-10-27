@@ -1,5 +1,5 @@
 # aegisvault
-[![Build Status](https://github.com/pepa65/aegisvault/actions/workflows/merge.yml/badge.svg?branch=main)](https://github.com/pepa65/aegisvault/actions/workflows/merge.yml)
+[![Build Status](https://github.com/pepa65/aegisvault/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/pepa65/aegisvault/actions/workflows/ci.yml)
 [![dependency status](https://deps.rs/repo/github/pepa65/aegisvault/status.svg)](https://deps.rs/repo/github/pepa65/aegisvault)
 <!--[![Crates.io](https://img.shields.io/crates/v/aegisvault.svg)](https://crates.io/crates/aegisvault)-->
 [![License file](https://img.shields.io/github/license/pepa65/aegisvault)](https://github.com/pepa65/aegisvault/blob/main/LICENSE)

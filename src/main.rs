@@ -1,4 +1,7 @@
-use aegisvault::{algorithm::{Algorithm, Method}, vault::{Aegis, Entry}};
+use aegisvault::{
+	algorithm::{Algorithm, Method},
+	vault::{Aegis, Entry},
+};
 use anyhow::Result;
 use clap::Parser;
 use rpassword::read_password;
@@ -11,7 +14,7 @@ use urlencoding::decode;
 #[derive(Parser, Debug)]
 #[command(version, about)]
 #[command(help_template(
-  "\
+	"\
 {before-help}{name} {version} - {about}
 {usage-heading} {usage}
 {all-args}{after-help}
@@ -26,7 +29,7 @@ fn main() -> Result<()> {
 	let arg = Cli::parse();
 	eprint!("Password to be set on the Encrypted Aegis vault JSON output: ");
 	stdout().flush().unwrap();
-  let password = read_password().unwrap();
+	let password = read_password().unwrap();
 	let mut vault = Aegis::default();
 	let file = std::fs::read_to_string(arg.uri_file).unwrap();
 	for line in file.lines() {

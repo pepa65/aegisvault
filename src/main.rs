@@ -1,19 +1,34 @@
-use aegisvault::{
-	algorithm::{Algorithm, Method},
-	vault::{Aegis, Entry},
-};
+use aegisvault::{algorithm::{Algorithm, Method}, vault::{Aegis, Entry}};
 use anyhow::Result;
-use std::fs::File;
+use clap::Parser;
+use rpassword::read_password;
+use serde_json::ser::to_string_pretty;
+use std::borrow::Cow::Borrowed;
+use std::io::{stdout, Write};
 use url::Url;
 use urlencoding::decode;
 
-const URI_IN: &str = "twofat.uri";
-const JSON_OUT: &str = "aegis.json";
-const PASSWORD: &str = "password";
+#[derive(Parser, Debug)]
+#[command(version, about)]
+#[command(help_template(
+  "\
+{before-help}{name} {version} - {about}
+{usage-heading} {usage}
+{all-args}{after-help}
+"
+))]
+struct Cli {
+	#[clap(help = "The otpauth URI inputfile")]
+	uri_file: std::path::PathBuf,
+}
 
 fn main() -> Result<()> {
+	let arg = Cli::parse();
+	eprint!("Password to be set on the Encrypted Aegis vault JSON output: ");
+	stdout().flush().unwrap();
+  let password = read_password().unwrap();
 	let mut vault = Aegis::default();
-	let file = std::fs::read_to_string(URI_IN).unwrap();
+	let file = std::fs::read_to_string(arg.uri_file).unwrap();
 	for line in file.lines() {
 		let mut otp = Entry::default();
 		let uri = Url::parse(line).unwrap_or_else(|e| panic!("{e}"));
@@ -27,14 +42,14 @@ fn main() -> Result<()> {
 			"steam" => Method::Steam,
 			"motp" => Method::Motp,
 			"yandex" => Method::Yandex,
-			_ => panic!("Unknown type"),
+			_ => panic!("Unknown otpauth URI type"),
 		};
 		otp.label = decode(label).unwrap().to_string();
 		let q = uri.query_pairs().collect::<Vec<_>>();
 		for (key, val) in q.iter() {
-			match key.to_owned() {
-				std::borrow::Cow::Borrowed("secret") => otp.info.secret = val.to_string(),
-				std::borrow::Cow::Borrowed("algorithm") => {
+			match key.clone() {
+				Borrowed("secret") => otp.info.secret = val.to_string(),
+				Borrowed("algorithm") => {
 					otp.info.algorithm = match val.as_ref() {
 						"SHA1" => Algorithm::SHA1,
 						"SHA256" => Algorithm::SHA256,
@@ -42,9 +57,9 @@ fn main() -> Result<()> {
 						_ => panic!("Unknown HMAC algorithm"),
 					}
 				}
-				std::borrow::Cow::Borrowed("digits") => otp.info.digits = val.parse::<u32>().unwrap(),
-				std::borrow::Cow::Borrowed("period") => otp.info.period = Some(val.parse::<u32>().unwrap()),
-				std::borrow::Cow::Borrowed("issuer") => otp.issuer = Some(decode(val).unwrap().to_string()),
+				Borrowed("digits") => otp.info.digits = val.parse::<u32>().unwrap(),
+				Borrowed("period") => otp.info.period = Some(val.parse::<u32>().unwrap()),
+				Borrowed("issuer") => otp.issuer = Some(decode(val).unwrap().to_string()),
 				_ => panic!("Unknown key: {key}"),
 			};
 		}
@@ -52,12 +67,9 @@ fn main() -> Result<()> {
 		vault.add_entry(otp);
 	}
 
-	//let raw_unencrypted_vault = serde_json::ser::to_string_pretty(&vault).unwrap();
-	//println!("{}", raw_unencrypted_vault);
-	vault.save(&mut File::create(JSON_OUT)?, PASSWORD)?;
-
-	//vault.encrypt(PASSWORD).unwrap();
-	//let raw_encrypted_vault = serde_json::ser::to_string_pretty(&vault).unwrap();
-
+	//vault.save(&mut File::create(OUTPUTFILE)?, &password)?;
+	vault.encrypt(&password).unwrap();
+	let raw_encrypted_vault = to_string_pretty(&vault).unwrap();
+	println!("{raw_encrypted_vault}");
 	Ok(())
 }

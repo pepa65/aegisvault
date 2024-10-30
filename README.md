@@ -1,4 +1,4 @@
-# aegisvault
+# aegisvault 0.2.0
 [![Build Status](https://github.com/pepa65/aegisvault/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/pepa65/aegisvault/actions/workflows/ci.yml)
 [![dependency status](https://deps.rs/repo/github/pepa65/aegisvault/status.svg)](https://deps.rs/repo/github/pepa65/aegisvault)
 [![License file](https://img.shields.io/github/license/pepa65/aegisvault)](https://github.com/pepa65/aegisvault/blob/main/LICENSE)
@@ -11,15 +11,66 @@
 * This repo is after https://github.com/louib/aegis-vault-rs
 * The Encrypted Aegis vault JSON files produced are Vault version 1, Database version 2.
   (Database version 3 is used too, but importing version 2 is still supported.)
+* The included decrypt.py is from:
+  https://github.com/beemdevelopment/Aegis/raw/refs/heads/master/docs/decrypt.py
+
+## Install
+### Install standalone single-binary
+```
+wget https://github.com/pepa65/argisvault/releases/download/0.2.0/aegisvault
+sudo mv aegisvault /usr/local/bin
+sudo chown root:root /usr/local/bin/aegisvault
+sudo chmod +x /usr/local/bin/aegisvault
+```
+
+### Install with cargo
+If not installed yet, install a **Rust toolchain**, see https://www.rust-lang.org/tools/install
+
+#### Direct from crates.io
+`cargo install aegisvault`
+
+#### Direct from repo
+`cargo install --git https://github.com/pepa65/aegisvault`
+
+#### Static build (avoiding GLIBC incompatibilities)
+```
+git clone https://github.com/pepa65/aegisvault
+cd aegisvault
+rustup target add x86_64-unknown-linux-musl
+cargo rel  # Alias in .cargo/config.toml
+```
+
+The binary will be at `target/x86_64-unknown-linux-musl/release/aegisvault`
+
+### Install with cargo-binstall
+Even without a full Rust toolchain, rust binaries can be installed with the static binary `cargo-binstall`:
+
+```
+# Install cargo-binstall for Linux x86_64
+# (Other versions are available at https://crates.io/crates/cargo-binstall)
+wget github.com/cargo-bins/cargo-binstall/releases/latest/download/cargo-binstall-x86_64-unknown-linux-musl.tgz
+tar xf cargo-binstall-x86_64-unknown-linux-musl.tgz
+sudo chown root:root cargo-binstall
+sudo mv cargo-binstall /usr/local/bin/
+```
+
+Only a linux-x86_64 (musl) binary available: `cargo-binstall aegisvault`
+
+It will be installed in `~/.cargo/bin/` which will need to be added to `PATH`!
+
+
 
 ## Usage
-* Clone the repo: `git clone https://github.com/pepa65/aegisvault`
-* Do `cd aegisvault`
-* Edit `src/main.rs`:
-  - Adjust the constant `URI_IN` for the (unencrypted) otpauth URI inputfile.
-  - Adjust the constant `JSON_OUT` for the Encrypted Aegis Vault JSON outputfile.
-  - Adjust the constant `PASSWORD` for the password to be set on the outputfile.
-* Execute: `cargo run` in the repo's root directory.
+```
+aegisvault 0.2.0 - Convert otpauth URI file to Encrypted Aegis vault JSON on stdout
+Usage: aegisvault <URI_FILE>
+Arguments:
+  <URI_FILE>  The otpauth URI inputfile
+
+Options:
+  -h, --help     Print help
+  -V, --version  Print version
+```
 
 * Unencrypted otpauth URI files consist of lines with this format:
   `otpauth://TYPE/NAME?secret=SECRET&algorithm=HMAC_ALGORITHM&digits=LENGTH&period=PERIOD&issuer=ISSUER`

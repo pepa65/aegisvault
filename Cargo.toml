@@ -1,11 +1,19 @@
 [package]
 name = "aegisvault"
-description = "Convert otpauth URI file to Encrypted Aegis vault JSON file"
+description = "Convert otpauth URI file to Encrypted Aegis vault JSON on stdout"
 repository = "https://github.com/pepa65/aegisvault"
 documentation = "https://docs.rs/aegis-vault"
 license = "GPL-3.0-only"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
+
+[package.metadata.binstall]
+pkg-url = "{repo}/releases/download/{version}/{name}"
+pkg-fmt = "bin"
+disabled-strategies = ["quick-install", "compile"]
+target = "x86_64-unknown-linux-musl"
+target-family = "Linux"
+target-arch = "X86_64"
 
 [dependencies]
 aes-gcm = "0.10"
@@ -21,6 +29,8 @@ ring = "0.17"
 zeroize = {version = "1", features = ["zeroize_derive"]}
 urlencoding = "2.1.3"
 url = "2.5.2"
+rpassword = "7.3.1"
+clap = { version = "4", features = ["derive"] }
 
 [profile.release]
 opt-level = "z"

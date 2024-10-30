@@ -7,9 +7,8 @@
 //! note, icon, icon_mime, icon_hash, favorite, groups.
 //! When exporting to the aegis json format these are lost: icon, url?, help url?, tags?
 //!
-//! Exported files by this module cannot be decrypted by the python script in the aegis repository:
+//! Exported files by this module can be decrypted by the python script in the aegis repository:
 //! <https://github.com/beemdevelopment/Aegis/blob/master/docs/decrypt.py>
-//! However, Aegis android app is able to read the files!
 
 use aes_gcm::{aead::Aead, KeyInit};
 use anyhow::{anyhow, Context, Result};
@@ -140,6 +139,7 @@ impl Aegis {
 				if plain_text.version != 1 {
 					anyhow::bail!("Aegis vault version expected to be 1. Found {} instead.", plain_text.version);
 				// There is no version 0. So this should be okay ...
+				//PP Version 3 is current...
 				} else if plain_text.db.version > 2 {
 					anyhow::bail!("Aegis database version expected to be 1 or 2. Found {} instead.", plain_text.db.version);
 				} else {
@@ -248,6 +248,7 @@ impl Aegis {
 
 				// Check version of the database
 				println!("Found aegis database with version {}.", db.version);
+				//PP Version 3 is current...
 				if encrypted.version > 2 {
 					anyhow::bail!("Aegis database version expected to be 1 or 2. Found {} instead.", db.version);
 				}
@@ -267,7 +268,7 @@ impl Aegis {
 		self.encrypt(password)?;
 
 		let raw_encrypted_vault = serde_json::ser::to_string_pretty(&self)?;
-		destination.write(raw_encrypted_vault.as_bytes())?;
+		destination.write_all(raw_encrypted_vault.as_bytes())?;
 		destination.flush()?;
 		Ok(())
 	}

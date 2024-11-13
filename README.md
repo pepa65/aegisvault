@@ -1,4 +1,4 @@
-# aegisvault 0.2.0
+# aegisvault 0.2.1
 [![Build Status](https://github.com/pepa65/aegisvault/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/pepa65/aegisvault/actions/workflows/ci.yml)
 [![dependency status](https://deps.rs/repo/github/pepa65/aegisvault/status.svg)](https://deps.rs/repo/github/pepa65/aegisvault)
 [![License file](https://img.shields.io/github/license/pepa65/aegisvault)](https://github.com/pepa65/aegisvault/blob/main/LICENSE)
@@ -17,7 +17,7 @@
 ## Install
 ### Install standalone single-binary
 ```
-wget https://github.com/pepa65/argisvault/releases/download/0.2.0/aegisvault
+wget https://github.com/pepa65/argisvault/releases/download/0.2.1/aegisvault
 sudo mv aegisvault /usr/local/bin
 sudo chown root:root /usr/local/bin/aegisvault
 sudo chmod +x /usr/local/bin/aegisvault
@@ -62,7 +62,7 @@ It will be installed in `~/.cargo/bin/` which will need to be added to `PATH`!
 
 ## Usage
 ```
-aegisvault 0.2.0 - Convert otpauth URI file to Encrypted Aegis vault JSON on stdout
+aegisvault 0.2.1 - Convert otpauth URI file to Encrypted Aegis vault JSON on stdout
 Usage: aegisvault <URI_FILE>
 Arguments:
   <URI_FILE>  The otpauth URI inputfile

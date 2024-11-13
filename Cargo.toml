@@ -4,7 +4,7 @@ description = "Convert otpauth URI file to Encrypted Aegis vault JSON on stdout"
 repository = "https://github.com/pepa65/aegisvault"
 documentation = "https://docs.rs/aegis-vault"
 license = "GPL-3.0-only"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 
 [package.metadata.binstall]

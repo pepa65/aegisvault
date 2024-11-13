@@ -18,6 +18,8 @@ use zeroize::{Zeroize, ZeroizeOnDrop};
 
 use crate::algorithm::{Algorithm, Method};
 
+const DB_VER: u32 = 3;
+
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum Aegis {
@@ -383,7 +385,7 @@ pub struct Database {
 
 impl Default for Database {
 	fn default() -> Self {
-		Self { version: 2, entries: std::vec::Vec::new() }
+		Self { version: DB_VER, entries: std::vec::Vec::new() }
 	}
 }
 

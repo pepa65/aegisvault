@@ -3,7 +3,7 @@
 [![Dependencies](https://deps.rs/repo/github/pepa65/aegisvault/status.svg)](https://deps.rs/repo/github/pepa65/aegisvault)
 [![Docs](https://img.shields.io/badge/Docs-aegisvault-blue)](https://docs.rs/crate/aegisvault/latest)
 [![License](https://img.shields.io/github/license/pepa65/aegisvault)](https://github.com/pepa65/aegisvault/blob/main/LICENSE)
-[![Downloads](https://img.shields.io/crates/v/aegisvault.svg)](https://crates.io/crates/aegisvault)
+[![Downloads](https://img.shields.io/crates/d/aegisvault.svg)](https://crates.io/crates/aegisvault)
 
 **Convert otpauth URI file to Encrypted Aegis vault JSON file**
 

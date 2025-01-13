@@ -1,10 +1,11 @@
 [package]
 name = "aegisvault"
 description = "Convert otpauth URI file to Encrypted Aegis vault JSON on stdout"
+version = "0.2.2"
 repository = "https://github.com/pepa65/aegisvault"
-documentation = "https://docs.rs/aegis-vault"
+documentation = "https://docs.rs/aegisvault"
+readme = "README.md"
 license = "GPL-3.0-only"
-version = "0.2.1"
 edition = "2021"
 
 [package.metadata.binstall]
@@ -38,3 +39,7 @@ lto = true
 codegen-units = 1
 panic = "abort"
 strip = true
+
+[lints.clippy]
+inherent_to_string = "allow"
+to_string_trait_impl = "allow"

@@ -1,8 +1,9 @@
-# aegisvault 0.2.2
+# aegisvault 0.2.3
 [![Build Status](https://github.com/pepa65/aegisvault/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/pepa65/aegisvault/actions/workflows/ci.yml)
-[![dependency status](https://deps.rs/repo/github/pepa65/aegisvault/status.svg)](https://deps.rs/repo/github/pepa65/aegisvault)
-[![License file](https://img.shields.io/github/license/pepa65/aegisvault)](https://github.com/pepa65/aegisvault/blob/main/LICENSE)
-<!--[![Crates.io](https://img.shields.io/crates/v/aegisvault.svg)](https://crates.io/crates/aegisvault)-->
+[![Dependencies](https://deps.rs/repo/github/pepa65/aegisvault/status.svg)](https://deps.rs/repo/github/pepa65/aegisvault)
+[![Docs](https://img.shields.io/badge/Docs-aegisvault-blue)](https://docs.rs/crate/aegisvault/latest)
+[![License](https://img.shields.io/github/license/pepa65/aegisvault)](https://github.com/pepa65/aegisvault/blob/main/LICENSE)
+[![Downloads](https://img.shields.io/crates/v/aegisvault.svg)](https://crates.io/crates/aegisvault)
 
 **Convert otpauth URI file to Encrypted Aegis vault JSON file**
 

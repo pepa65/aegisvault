@@ -10,8 +10,8 @@
 //! Exported files by this module can be decrypted by the python script in the aegis repository:
 //! <https://github.com/beemdevelopment/Aegis/blob/master/docs/decrypt.py>
 
-use aes_gcm::{aead::Aead, KeyInit};
-use anyhow::{anyhow, Context, Result};
+use aes_gcm::{KeyInit, aead::Aead};
+use anyhow::{Context, Result, anyhow};
 use rand::RngCore;
 use serde::{Deserialize, Serialize};
 use zeroize::{Zeroize, ZeroizeOnDrop};
@@ -68,7 +68,7 @@ impl Aegis {
 
 	pub fn encrypt(&mut self, password: &str) -> Result<()> {
 		// Create a new master key
-		let mut rng = rand::thread_rng();
+		let mut rng = rand::rng();
 		let mut master_key = [0u8; 32];
 		rng.fill_bytes(&mut master_key);
 
@@ -340,7 +340,7 @@ impl HeaderSlot {
 
 impl Default for HeaderSlot {
 	fn default() -> Self {
-		let mut rng = rand::thread_rng();
+		let mut rng = rand::rng();
 		let mut salt = [0u8; 32];
 		rng.fill_bytes(&mut salt);
 
@@ -368,7 +368,7 @@ pub struct HeaderParam {
 
 impl Default for HeaderParam {
 	fn default() -> Self {
-		let mut rng = rand::thread_rng();
+		let mut rng = rand::rng();
 		let mut nonce = [0u8; 12];
 		rng.fill_bytes(&mut nonce);
 

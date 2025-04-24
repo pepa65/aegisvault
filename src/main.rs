@@ -7,7 +7,7 @@ use clap::Parser;
 use rpassword::read_password;
 use serde_json::ser::to_string_pretty;
 use std::borrow::Cow::Borrowed;
-use std::io::{stdout, Write};
+use std::io::{Write, stdout};
 use url::Url;
 use urlencoding::decode;
 

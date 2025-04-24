@@ -1,10 +1,10 @@
-# aegisvault 0.2.3
 [![Build Status](https://github.com/pepa65/aegisvault/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/pepa65/aegisvault/actions/workflows/ci.yml)
 [![Dependencies](https://deps.rs/repo/github/pepa65/aegisvault/status.svg)](https://deps.rs/repo/github/pepa65/aegisvault)
 [![Docs](https://img.shields.io/badge/Docs-aegisvault-blue)](https://docs.rs/crate/aegisvault/latest)
 [![License](https://img.shields.io/github/license/pepa65/aegisvault)](https://github.com/pepa65/aegisvault/blob/main/LICENSE)
 [![Downloads](https://img.shields.io/crates/d/aegisvault.svg)](https://crates.io/crates/aegisvault)
 
+# aegisvault 0.2.4
 **Convert otpauth URI file to Encrypted Aegis vault JSON file**
 
 * Documentation for the Aegis vault format can be found [here](https://github.com/beemdevelopment/Aegis/blob/master/docs/vault.md)
@@ -18,7 +18,7 @@
 ## Install
 ### Install standalone single-binary
 ```sh
-wget https://github.com/pepa65/argisvault/releases/download/0.2.2/aegisvault
+wget https://github.com/pepa65/argisvault/releases/download/0.2.4/aegisvault
 sudo mv aegisvault /usr/local/bin
 sudo chown root:root /usr/local/bin/aegisvault
 sudo chmod +x /usr/local/bin/aegisvault
@@ -63,7 +63,7 @@ It will be installed in `~/.cargo/bin/` which will need to be added to `PATH`!
 
 ## Usage
 ```text
-aegisvault 0.2.2 - Convert otpauth URI file to Encrypted Aegis vault JSON on stdout
+aegisvault 0.2.4 - Convert otpauth URI file to Encrypted Aegis vault JSON on stdout
 Usage: aegisvault <URI_FILE>
 Arguments:
   <URI_FILE>  The otpauth URI inputfile

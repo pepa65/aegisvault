@@ -1,12 +1,12 @@
 [package]
 name = "aegisvault"
-version = "0.2.3"
+version = "0.2.4"
+edition = "2024"
 description = "Convert otpauth URI file to Encrypted Aegis vault JSON on stdout"
 repository = "https://github.com/pepa65/aegisvault"
 documentation = "https://docs.rs/aegisvault"
 readme = "README.md"
 license = "GPL-3.0-only"
-edition = "2021"
 
 [package.metadata.binstall]
 pkg-url = "{repo}/releases/download/{version}/{name}"
@@ -17,21 +17,21 @@ target-family = "Linux"
 target-arch = "X86_64"
 
 [dependencies]
-aes-gcm = "0.10"
-anyhow = "1.0"
-data-encoding = "2.3"
+aes-gcm = "0.10.3"
+anyhow = "1.0.95"
+data-encoding = "2.6.0"
 hex = {version = "0.4.3", features = ["serde"]}
-scrypt = {version = "0.11", default-features = false}
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-uuid = {version = "1.0", features = ["v4"]}
-rand = "0.8"
-ring = "0.17"
-zeroize = {version = "1", features = ["zeroize_derive"]}
+scrypt = {version = "0.11.0", default-features = false}
+serde = { version = "1.0.217", features = ["derive"] }
+serde_json = "1.0.135"
+uuid = {version = "1.11.1", features = ["v4"]}
+rand = "0.9.1"
+ring = "0.17.14"
+zeroize = {version = "1.8.1", features = ["zeroize_derive"]}
 urlencoding = "2.1.3"
-url = "2.5.2"
+url = "2.5.4"
 rpassword = "7.3.1"
-clap = { version = "4", features = ["derive"] }
+clap = { version = "4.5.26", features = ["derive"] }
 
 [profile.release]
 opt-level = "z"

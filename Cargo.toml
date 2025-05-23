@@ -1,6 +1,6 @@
 [package]
 name = "aegisvault"
-version = "0.2.4"
+version = "0.2.5"
 edition = "2024"
 description = "Convert otpauth URI file to Encrypted Aegis vault JSON on stdout"
 repository = "https://github.com/pepa65/aegisvault"

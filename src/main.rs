@@ -4,6 +4,7 @@ use aegisvault::{
 };
 use anyhow::Result;
 use clap::Parser;
+use clap::builder::styling::{AnsiColor, Effects, Styles};
 use rpassword::read_password;
 use serde_json::ser::to_string_pretty;
 use std::borrow::Cow::Borrowed;
@@ -11,9 +12,18 @@ use std::io::{Write, stdout};
 use url::Url;
 use urlencoding::decode;
 
+// Cargo's color style: https://github.com/crate-ci/clap-cargo/blob/master/src/style.rs
+const STYLE: Styles = Styles::styled()
+	.header(AnsiColor::Green.on_default().effects(Effects::BOLD))
+	.usage(AnsiColor::Green.on_default().effects(Effects::BOLD))
+	.literal(AnsiColor::Cyan.on_default().effects(Effects::BOLD))
+	.placeholder(AnsiColor::Cyan.on_default())
+	.error(AnsiColor::Red.on_default().effects(Effects::BOLD))
+	.valid(AnsiColor::Cyan.on_default().effects(Effects::BOLD))
+	.invalid(AnsiColor::Yellow.on_default().effects(Effects::BOLD));
+
 #[derive(Parser, Debug)]
-#[command(version, about)]
-#[command(help_template(
+#[clap(version, about, styles = STYLE, help_template(
 	"\
 {before-help}{name} {version} - {about}
 {usage-heading} {usage}
@@ -21,7 +31,7 @@ use urlencoding::decode;
 "
 ))]
 struct Cli {
-	#[clap(help = "The otpauth URI inputfile")]
+	/// The otpauth URI inputfile
 	uri_file: std::path::PathBuf,
 }
 

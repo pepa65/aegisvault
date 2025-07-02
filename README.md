@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/github/license/pepa65/aegisvault)](https://github.com/pepa65/aegisvault/blob/main/LICENSE)
 [![Downloads](https://img.shields.io/crates/d/aegisvault.svg)](https://crates.io/crates/aegisvault)
 
-# aegisvault 0.2.9
+# aegisvault 0.3.0
 **Convert otpauth URI file to Encrypted Aegis vault JSON file**
 
 * Documentation for the Aegis vault format can be found [here](https://github.com/beemdevelopment/Aegis/blob/master/docs/vault.md)
@@ -63,7 +63,7 @@ It will be installed in `~/.cargo/bin/` which will need to be added to `PATH`!
 
 ## Usage
 ```text
-aegisvault 0.2.9 - Convert otpauth URI file to Encrypted Aegis vault JSON on stdout
+aegisvault 0.3.0 - Convert otpauth URI file to Encrypted Aegis vault JSON on stdout
 Usage: aegisvault <URI_FILE>
 Arguments:
   <URI_FILE>  The otpauth URI inputfile

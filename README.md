@@ -18,7 +18,7 @@
 ## Install
 ### Install standalone single-binary
 ```sh
-wget https://github.com/pepa65/argisvault/releases/download/0.2.9/aegisvault
+wget https://github.com/pepa65/argisvault/releases/download/0.3.0/aegisvault
 sudo mv aegisvault /usr/local/bin
 sudo chown root:root /usr/local/bin/aegisvault
 sudo chmod +x /usr/local/bin/aegisvault

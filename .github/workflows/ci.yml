@@ -1,5 +1,5 @@
 ---
-name: CI on Pull Requests
+name: build
 
 on:
   push:
@@ -11,15 +11,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  #commitlint:
-  #  name: Lint Commit Messages
-  #  runs-on: ubuntu-latest
-  #  steps:
-  #    - uses: actions/checkout@v3
-  #      with:
-  #        fetch-depth: 0
-  #    - uses: wagoid/commitlint-github-action@v5
-
   doc:
     name: Build Doc
     runs-on: ubuntu-latest

@@ -8,6 +8,8 @@ repository = "https://github.com/pepa65/aegisvault"
 documentation = "https://docs.rs/aegisvault"
 readme = "README.md"
 license = "GPL-3.0-only"
+keywords = ["cli", "otpauth", "json", "aegis"]
+categories = ["command-line-utilities", "encoding"]
 
 [package.metadata.binstall]
 pkg-url = "{repo}/releases/download/{version}/{name}"

@@ -31,13 +31,13 @@ const STYLE: Styles = Styles::styled()
 "
 ))]
 struct Cli {
-	/// The otpauth URI inputfile
+	/// The otpauth-URI inputfile
 	uri_file: std::path::PathBuf,
 }
 
 fn main() -> Result<()> {
 	let arg = Cli::parse();
-	eprint!("Password to be set on the Encrypted Aegis vault JSON output: ");
+	eprint!("Password to be set on the Encrypted Aegis JSON output file: ");
 	stdout().flush().unwrap();
 	let password = read_password().unwrap();
 	let mut vault = Aegis::default();

@@ -1,0 +1,58 @@
+https://github.com/beemdevelopment/Aegis/blob/master/docs/vault.md
+
+Encrypted with AES-256-GCM, key derived with Scrypt.
+
+Unencrypted Aegis JSON: {version:1, header:{slots:null, params:null}, db:{DB}}
+Encrypted Aegis JSON: {version:1, header:{slots:[SLOT], params:{nonce:str, tag:str}}, db:base64str}
+
+#{SLOT0}: {type:0, uuid:, key:, key_params:{nonce:, tag:}}
+SLOT: {type:1, uuid:str, key:str, key_params:{nonce:str, tag:str}, n:32768, r:8, p:1, salt:str, repaired:true, is_backup:false}
+
+DB(2): {version:2, entries:[ENTRY2]}
+ENTRY2: {type:"totp", uuid:str, name:str, issuer:str, icon:null, info:INFO}
+# If icon==null, these fields can be left out: icon_mime icon_hash
+
+DB(3): {version:3, entries:[ENTRY3], groups:[GROUP], icons_optimized:bool}
+
+ENTRY3: {type:TYPE, uuid:str, name:str, issuer:str, note:str, icon:str, icon_mime:str, icon_hash:str, favorite:BOOL, info:INFO, groups:[GROUP]}
+
+TYPE: hotp/totp/steam/yandex/motp
+BOOL: false/true
+INFO: {secret:base32str, algorithm:ALGO, digits:6, period:30}
+ALGO: SHA1/SHA256/SHA512/MD5
+GROUP: {uuid:str, name:str}
+
+{
+	"version": 1,
+	"header": {
+		"slots": null,
+		"params": null
+	},
+	"db": {
+		"version": 3,
+		"entries": [
+			{
+				"type": "totp",
+				"uuid": "ab8d53d7-2560-42ea-3c3a-4bd4e2aaa9b1",
+				"name": "Wise.com",
+				"issuer": "Wise.com",
+				"note": "",
+				"favorite": false,
+				"icon": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiPg0KICAgPGNpcmNsZS
+BjeD0iNTEyIiBjeT0iNTEyIiByPSI1MTIiIHN0eWxlPSJmaWxsOiM5ZmU4NzAiLz4NCiAgIDxwYXRoIGQ9Ik00MDMuOTkgNDMzLjIxIDI3Ni44NSA1ODEuNzloMjI3LjAxbDI1LjUyLTcwLjA3aC05Ny4yN0w0OTEuNTYgNDQzbC4xOS0xLjg0LTM4LjY2LTY2LjUyaDE3My44N0w0OTIuMTcgNzQ1LjVoOTIuMjNsMTYyLjc1LTQ0N0gzMjYuNjdsNzcuMjkgMTM0LjcxaC4wM3oiLz4NCjwvc3ZnPg0K",
+				"icon_mime": "image\/svg+xml",
+				"icon_hash": "cd0650cbad0bcf3f8ec33396c0d7783b0b9a27e719c0335bdb9f060dc3f41e54",
+				"info": {
+					"secret": "DEHDHKUFCHREUIFGERFVE",
+					"algo": "SHA1",
+					"digits": 6,
+					"period": 30
+				},
+				"groups": []
+				""
+			}
+		],
+		"groups": []
+		"icons_optimized": true
+	}
+}

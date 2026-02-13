@@ -4,8 +4,9 @@
 //! <https://github.com/beemdevelopment/Aegis/blob/master/docs/vault.md>
 //!
 //! This module does not convert all information from aegis, lost are:
-//! note, icon, icon_mime, icon_hash, favorite, groups.
-//! When exporting to the aegis json format these are lost: icon, url?, help url?, tags?
+//!   note, icon, icon_mime, icon_hash, favorite, groups.
+//! When exporting to the aegis json format these are lost:
+//!   icon, url?, help url?, tags?
 //!
 //! Exported files by this module can be decrypted by the python script in the aegis repository:
 //! <https://github.com/beemdevelopment/Aegis/blob/master/docs/decrypt.py>
@@ -37,12 +38,11 @@ pub struct AegisPlainText {
 
 impl Default for AegisPlainText {
 	fn default() -> Self {
-		Self { version: 1, header: Header { params: None, slots: Default::default() }, db: Default::default() }
+		Self { version: 1, header: Header { params: None, slots: None }, db: Default::default() }
 	}
 }
 
-/// Encrypted version of the JSON format. `db` is simply a base64 encoded string
-/// with an encrypted AegisDatabase.
+/// Encrypted version of the JSON format. `db` is simply a base64 encoded string of the encrypted Database.
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AegisEncrypted {
 	version: u32,
@@ -75,19 +75,18 @@ impl Aegis {
 		// Create a new header (including defaults for a password slot)
 		let mut header = Header { params: Some(HeaderParam::default()), slots: Some(vec![HeaderSlot::default()]) };
 
-		// We only support password encrypted database so far so we don't have to do any
-		// checks for the slot type
+		// We only support password encrypted database so we don't have to do any checks for the slot type
 		let password_slot = &mut header.slots.as_mut().unwrap().get_mut(0).unwrap();
 		// Derive key from given password
 		let mut derived_key: [u8; 32] = [0u8; 32];
 		let params = scrypt::Params::new(
-			// TODO log2 for u64 is not stable yet. Change this in the future.
+			// log2 for u64 is stable since Rust 1.65
 			(password_slot.n() as f64).log2() as u8,
 			password_slot.r(),
 			password_slot.p(),
 			scrypt::Params::RECOMMENDED_LEN,
 		)
-		// All parameters are default values. Thus, this should always work and unwrap is okay.
+		// All parameters are default values, so unwrap should always work
 		.expect("Scrypt params creation");
 		scrypt::scrypt(password.as_bytes(), password_slot.salt(), &params, &mut derived_key).map_err(|_| anyhow::anyhow!("Scrypt key derivation"))?;
 
@@ -251,9 +250,9 @@ impl Aegis {
 				// Check version of the database
 				println!("Found aegis database with version {}.", db.version);
 				//PP Version 3 is current...
-				if encrypted.version > 2 {
-					anyhow::bail!("Aegis database version expected to be 1 or 2. Found {} instead.", db.version);
-				}
+				//if encrypted.version > 2 {
+				//	anyhow::bail!("Aegis database version expected to be 1 or 2. Found {} instead.", db.version);
+				//}
 
 				// Return entries
 				for mut entry in db.entries {
@@ -297,7 +296,7 @@ pub struct HeaderSlot {
 	// However, in the future, authenticator app might be able to lock / unlock the database using
 	// fingerprint sensors (see <https://gitlab.gnome.org/World/Authenticator/-/issues/106> for more
 	// information). Thus, it might be possible to read also these biometric slots and unlock them
-	// with a fingerprint reader used by authenticar. However, it would be ncessary that aegis
+	// with a fingerprint reader used by authenticator. However, it would be necessary that aegis
 	// android app (thus the android system) and authenticator use the same mechanisms to derive
 	// keys from biometric input. This has to be checked beforehand.
 	//
@@ -371,7 +370,6 @@ impl Default for HeaderParam {
 		let mut rng = rand::rng();
 		let mut nonce = [0u8; 12];
 		rng.fill_bytes(&mut nonce);
-
 		Self { nonce, tag: [0u8; 16] }
 	}
 }
@@ -381,11 +379,12 @@ impl Default for HeaderParam {
 pub struct Database {
 	pub version: u32,
 	pub entries: Vec<Entry>,
+	pub groups: Option<Vec<bool>>, // No use specifying the actual struct, so use bool
 }
 
 impl Default for Database {
 	fn default() -> Self {
-		Self { version: DB_VER, entries: std::vec::Vec::new() }
+		Self { version: DB_VER, entries: std::vec::Vec::new(), groups: None }
 	}
 }
 
@@ -410,8 +409,7 @@ pub struct Entry {
 
 	// Note is omitted
 	// Icon:
-	// TODO: Aegis encodes icons as JPEG's encoded in Base64 with padding. Does authenticator
-	// support this?
+	// TODO: Aegis encodes icons as JPEG's encoded in Base64 with padding. Does authenticator support this?
 	#[serde(rename = "icon")]
 	pub thumbnail: Option<String>,
 

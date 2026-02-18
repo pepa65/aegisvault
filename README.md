@@ -5,7 +5,7 @@
 [![license](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://github.com/pepa65/aegisvault/blob/main/LICENSE)
 [![downloads](https://img.shields.io/crates/d/aegisvault.svg)](https://crates.io/crates/aegisvault)
 
-# aegisvault 0.4.1
+# aegisvault 0.4.2
 **Convert otpauth URI file to Encrypted Aegis vault JSON file**
 
 * Documentation for the Aegis vault format can be found [here](https://github.com/beemdevelopment/Aegis/blob/master/docs/vault.md)
@@ -34,7 +34,7 @@ The JSON `header` field:
 		{
 			"type": 1,
 			"uuid": "62141a6a-5d4c-48ef-bb06-db0c3642a0b8",
-			"key": "ce586c1a4520.4.19c740dfd2878f875d18b95facbe4cc812cc31fc3e87bc68f",
+			"key": "ce586c1a4520.4.29c740dfd2878f875d18b95facbe4cc812cc31fc3e87bc68f",
 			"key_params": {
 				"nonce": "9bf72b47e87a165962adddc3",
 				"tag": "c51ff5e48b3239e1b474f03319e42564"
@@ -136,7 +136,7 @@ It will be installed in `~/.cargo/bin/` which will need to be added to `PATH`!
 
 ## Usage
 ```text
-aegisvault 0.4.1 - Convert otpauth-URI file to Encrypted Aegis JSON on stdout
+aegisvault 0.4.2 - Convert otpauth-URI file to Encrypted Aegis JSON on stdout
 Usage: aegisvault <URI_FILE>
 Arguments:
   <URI_FILE>  The otpauth-URI input

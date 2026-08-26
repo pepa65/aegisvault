@@ -13,8 +13,9 @@
 
 use aes_gcm::{KeyInit, aead::Aead};
 use anyhow::{Context, Result, anyhow};
-use rand::RngCore;
+use rand::RngExt;
 use serde::{Deserialize, Serialize};
+use std::convert::TryFrom;
 use zeroize::{Zeroize, ZeroizeOnDrop};
 
 use crate::algorithm::{Algorithm, Method};
@@ -70,7 +71,7 @@ impl Aegis {
 		// Create a new master key
 		let mut rng = rand::rng();
 		let mut master_key = [0u8; 32];
-		rng.fill_bytes(&mut master_key);
+		rng.fill(&mut master_key);
 
 		// Create a new header (including defaults for a password slot)
 		let mut header = Header { params: Some(HeaderParam::default()), slots: Some(vec![HeaderSlot::default()]) };
@@ -84,7 +85,6 @@ impl Aegis {
 			(password_slot.n() as f64).log2() as u8,
 			password_slot.r(),
 			password_slot.p(),
-			scrypt::Params::RECOMMENDED_LEN,
 		)
 		// All parameters are default values, so unwrap should always work
 		.expect("Scrypt params creation");
@@ -96,7 +96,7 @@ impl Aegis {
 			Err(_) => return Err(anyhow!("Could not create cipher from key")),
 		};
 		let mut ciphertext: Vec<u8> = cipher
-			.encrypt(aes_gcm::Nonce::from_slice(&password_slot.key_params.nonce), master_key.as_ref())
+			.encrypt(&aes_gcm::Nonce::try_from(&password_slot.key_params.nonce[..])?, master_key.as_ref())
 			.map_err(|_| anyhow::anyhow!("Encrypter master key"))?;
 
 		// Add encrypted master key and tag to our password slot. If this assignment
@@ -112,7 +112,7 @@ impl Aegis {
 				Err(_) => return Err(anyhow!("Could not create cipher from master key")),
 			};
 			let mut ciphertext: Vec<u8> = cipher
-				.encrypt(aes_gcm::Nonce::from_slice(&header.params.as_ref().unwrap().nonce), db_json.as_ref())
+				.encrypt(&aes_gcm::Nonce::try_from(&header.params.as_ref().unwrap().nonce[..])?, db_json.as_ref())
 				.map_err(|_| anyhow::anyhow!("Encrypting aegis database"))?;
 			header.params.as_mut().unwrap().tag = ciphertext.split_off(ciphertext.len() - 16).try_into().unwrap();
 			let db_encrypted = ciphertext;
@@ -190,7 +190,6 @@ impl Aegis {
 							(slot.n() as f64).log2() as u8, // Defaults to 15 by aegis
 							slot.r(),                       // Defaults to 8 by aegis
 							slot.p(),                       // Defaults to 1 by aegis
-							scrypt::Params::RECOMMENDED_LEN,
 						)
 						.map_err(|_| anyhow::anyhow!("Invalid scrypt parameters"))?;
 						let mut temp_key: [u8; 32] = [0u8; 32];
@@ -208,7 +207,7 @@ impl Aegis {
 						// Here we get the master key. The decrypt function does not return an error
 						// implementing std error. Thus, we have to convert it.
 						cipher
-							.decrypt(aes_gcm::Nonce::from_slice(&slot.key_params.nonce), ciphertext.as_ref())
+							.decrypt(&aes_gcm::Nonce::try_from(&slot.key_params.nonce[..])?, ciphertext.as_ref())
 							.map_err(|_| anyhow::anyhow!("Cannot decrypt master key"))
 					})
 					// Here, we don't want to fail the whole function because one key slot failed to
@@ -240,7 +239,7 @@ impl Aegis {
 					Err(_) => return Err(anyhow!("Could not create cipher from key")),
 				};
 				let plaintext = cipher
-					.decrypt(aes_gcm::Nonce::from_slice(&encrypted.header.params.as_ref().unwrap().nonce), ciphertext.as_ref())
+					.decrypt(&aes_gcm::Nonce::try_from(&encrypted.header.params.as_ref().unwrap().nonce[..])?, ciphertext.as_ref())
 					// Decrypt does not return an error implementing std error, thus we convert it.
 					.map_err(|_| anyhow::anyhow!("Cannot decrypt database"))?;
 
@@ -341,7 +340,7 @@ impl Default for HeaderSlot {
 	fn default() -> Self {
 		let mut rng = rand::rng();
 		let mut salt = [0u8; 32];
-		rng.fill_bytes(&mut salt);
+		rng.fill(&mut salt);
 
 		Self {
 			type_: 1,
@@ -369,7 +368,7 @@ impl Default for HeaderParam {
 	fn default() -> Self {
 		let mut rng = rand::rng();
 		let mut nonce = [0u8; 12];
-		rng.fill_bytes(&mut nonce);
+		rng.fill(&mut nonce);
 		Self { nonce, tag: [0u8; 16] }
 	}
 }

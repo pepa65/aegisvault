@@ -566,20 +566,14 @@ mod tests {
 		let mut aegis_root = Aegis::default();
 		let password = "my-super-secure-password";
 
-		let mut otp_entry = Entry::default();
-		otp_entry.method = Method::TOTP;
-		otp_entry.label = "Mason".to_string();
-		otp_entry.issuer = Some("Deno".to_string());
+		let mut otp_entry = Entry { method: Method::TOTP, label: "Mason".to_string(), issuer: Some("Deno".to_string()), ..Default::default() };
 		otp_entry.info.secret = "4SJHB4GSD43FZBAI7C2HLRJGPQ".to_string();
 		otp_entry.info.period = Some(30);
 		otp_entry.info.digits = 6;
 		otp_entry.info.counter = None;
 		aegis_root.add_entry(otp_entry);
 
-		let mut otp_entry = Entry::default();
-		otp_entry.method = Method::HOTP;
-		otp_entry.label = "James".to_string();
-		otp_entry.issuer = Some("Issuu".to_string());
+		let mut otp_entry = Entry { method: Method::HOTP, label: "James".to_string(), issuer: Some("Issuu".to_string()), ..Default::default() };
 		otp_entry.info.secret = "YOOMIXWS5GN6RTBPUFFWKTW5M4".to_string();
 		otp_entry.info.algorithm = Algorithm::SHA1;
 		otp_entry.info.period = None;
